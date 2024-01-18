@@ -1,0 +1,168 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Generate QR</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap');
+.star {
+  transform-style: preserve-3d;
+  width: 1px;
+  height: 1px;
+  position: absolute;
+  color: blue;
+}
+.star:before {
+  position: absolute;
+  content: '\2726';
+  color: inherit;
+  inset: 0;
+  box-shadow: 0 0 1em .5em #a3c2;
+  filter: drop-shadow(0 0 .5em white);
+  text-shadow: 0 0 .8em #fff5;
+}
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Montserrat', sans-serif;
+  color: #F9F6EF;
+  display: grid;
+  place-content: center;
+  background-image:
+    radial-gradient(
+    circle at 50% 50%,
+      #2f3040,
+      #1f2020
+    );
+}
+.button {
+  background-color: #04AA6D;
+  border: none;
+  color: white;
+  width:28%;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+.button1 {
+  background-color: white;
+  color: black;
+  border: 2px solid #D9EDBF;
+  border-radius:10px;
+}
+
+.button1:hover {
+  background-color: #3E3232;
+  color: white;
+}
+input{
+width:300px;
+height:10%;
+margin-top:50px;
+border: 2px solid lightblue;
+border-radius:10px;
+}
+.inner{
+width:740px;
+height:400px;
+text-align:center;
+background-color:#000000;
+border-radius:10px;
+border: 2px solid #D9EDBF;
+}
+img{
+padding-top:50px;
+}
+.output{
+margin-top:200px;
+}
+    </style>
+</head>
+<body>
+<div class="inner">
+
+   <h1>Enter the URL or text below to get QR Code</h1>
+   <form method="post" action="{% url 'index' %}">
+        {% csrf_token %}
+       <center>
+        <input type="text" name="data" id="entry" placeholder="Enter here">
+        <br><br><br>
+        <button class="button button1" value="Generate QR Code" id="btn" type="submit">Generate QR</button>
+   <br>
+   {% if data %}
+           <div class="output">
+           <h1>
+               Your QR
+           </h1>
+               </div>
+  <img src="{% static 'qrweb/images/test.png' %}" alt="No Image">
+   {% else %}
+   <h1>Please enter valid input.</h1>
+   {% endif %}
+   </center>
+        </form>
+    </div>
+<script>
+let x1=0, y1=0;
+window.client
+const
+  vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0),
+  dist_to_draw = 50,
+  delay = 1000,
+  fsize = [
+    '1.1rem', '1.4rem', '.8rem', '1.7rem'
+  ],
+  colors = [
+  '#E23636',
+  '#F9F3EE',
+  '#E1F8DC',
+  '#B8AFE6',
+  '#AEE1CD',
+  '#5EB0E5'
+],
+  rand = (min, max) =>
+    Math.floor(Math.random() * (max - min + 1)) + min,
+  selRand = (o) => o[rand(0, o.length -1)],
+  distanceTo =  (x1, y1, x2, y2) =>
+    Math.sqrt((Math.pow(x2-x1,2))+(Math.pow(y2-y1,2))),
+  shouldDraw = (x, y) =>
+    (distanceTo(x1, y1, x, y) >= dist_to_draw),
+  addStr = (x, y) => {
+    const str = document.createElement("div");
+    str.innerHTML = '&#10022;';
+    str.className = 'star';
+    str.style.top = `${y + rand(-20,20)}px`;
+    str.style.left = `${x}px`;
+    str.style.color = selRand(colors);
+    str.style.fontSize = selRand(fsize);
+    document.body.appendChild(str)
+    const fs = 10 + 5 * parseFloat(getComputedStyle(str).fontSize);
+    str.animate({
+      translate: `0 ${(y+fs)>vh?vh-y:fs}px`,
+      opacity: 0,
+      transform: `rotateX(${rand(1, 500)}deg) rotateY(${rand(1, 500)}deg)`
+    }, {
+      duration: delay,
+      fill: 'forwards',
+
+    });
+    setTimeout(() => {
+        str.remove();
+      }, delay);
+  }
+addEventListener("mousemove", (e) => {
+  const {clientX, clientY} = e;
+  if(shouldDraw(clientX, clientY)){
+    addStr(clientX, clientY);
+    x1 = clientX;
+    y1 = clientY;
+  }
+});
+</script>
+</body>
+</html>
