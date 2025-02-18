@@ -95,15 +95,13 @@ margin-top:200px;
         <button class="button button1" value="Generate QR Code" id="btn" type="submit">Generate QR</button>
    <br>
    {% if data %}
-           <div class="output">
-           <h1>
-               Your QR
-           </h1>
-               </div>
-  <img src="{% static 'qrweb/images/test.png' %}" alt="No Image">
-   {% else %}
-   <h1>Please enter valid input.</h1>
-   {% endif %}
+    <div class="output">
+        <h1>Your QR</h1>
+    </div>
+    <img src="{{ img_path }}" alt="QR Code">
+{% else %}
+    <h1>Please enter valid input.</h1>
+{% endif %}
    </center>
         </form>
     </div>
